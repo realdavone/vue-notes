@@ -11,14 +11,14 @@
       </header>
       <section>
         <div class="add-note">
-          <textarea v-model="newNote" placeholder="Nová poznámka..."></textarea>
+          <textarea v-model="newNote" placeholder="Nová poznámka..." @keypress.enter.prevent="addNote"></textarea>
           <button class="add-note-button" @click="addNote">Pridať poznámku</button>
         </div>
         <div v-if="!!topicsStore.activeTopic.notes.length">
           <Note v-for="note in topicsStore.activeTopic.notes" :key="note.id" :note="note" />
         </div>
         <div v-else>
-          Tu nie sú žiadne poznámky.
+          Nie sú tu žiadne poznámky.
         </div>
       </section>
     </div>
@@ -39,7 +39,13 @@ const newNote = ref('')
 
 const removeTopic = (id) => topicsStore.removeTopic(id)
 
-const addNote = () => topicsStore.addNoteToTopic(topicsStore.activeTopic.id, newNote.value)
+const addNote = () => {
+  if(!!!newNote.value) {
+    return
+  } 
+  topicsStore.addNoteToTopic(topicsStore.activeTopic.id, newNote.value)
+  newNote.value = ''
+}
 </script>
 
 <style scoped>
@@ -95,5 +101,9 @@ textarea {
   border: 1px solid grey;
   padding: 0.5rem;
   width: 100%;
+}
+
+textarea:focus {
+  border-color: white;
 }
 </style>

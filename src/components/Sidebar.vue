@@ -1,18 +1,25 @@
 <template>
   <aside>
-    <header>
-      <h2>Témy</h2>
-      <button class="add-topic-button" @click="modalRef.toggleModal(true)">Pridať tému</button>
-    </header>
-
-    <div>
-      <Topic v-for="topic in topicsStore.topics" :key="topic.id" :topic="topic" />
+    <div class="logo">
+      Poznámky
     </div>
+    <section class="content">
+      <header>
+        <h2>Témy</h2>
+        <button class="add-topic-button" @click="modalRef.toggleModal(true)">Pridať tému</button>
+      </header>
 
+      <div v-if="!!topicsStore.topics.length">
+        <Topic v-for="topic in topicsStore.topics" :key="topic.id" :topic="topic" />
+      </div>
+      <div v-else>
+        Nie sú tu žiadne témy
+      </div>      
+    </section>
   </aside>
   <Modal ref="modalRef" @opened="mounted">
     <template #body>
-      <input ref="inputRef" type="text" v-model="newTopicTitle" placeholder="Názov témy" />
+      <input ref="inputRef" type="text" v-model="newTopicTitle" placeholder="Názov témy" @keypress.enter="saveTopic" />
     </template>
     <template #footer>
       <div class="buttons">
@@ -35,9 +42,8 @@ const inputRef = ref(null)
 
 const saveTopic = () => {
   const newTopic = topicsStore.addTopic(newTopicTitle.value)
-
+  newTopicTitle.value = null
   modalRef.value.toggleModal(false)
-
   topicsStore.selectTopicAsActive(newTopic.id)
 }
 
@@ -48,9 +54,18 @@ const mounted = () => setTimeout(() => inputRef.value.focus(), 50)
 
 <style scoped>
 aside {
-  padding: 1.5rem;
   width: 20%;
-  background-color: var(--secondary-background-color);
+  border-right: 1px solid var(--secondary-background-color);
+}
+.logo {
+  background-color: var(--primary-color);
+  padding-inline: 1.5rem;
+  padding-block: 1.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+.content {
+  padding: 1.5rem;
 }
 
 header {
@@ -59,7 +74,6 @@ header {
   align-items: center;
   margin-bottom: 1rem;
 }
-
 .add-topic-button {
   align-self: flex-end;
   background-color: var(--primary-color);
@@ -70,9 +84,13 @@ header {
 
 input {
   color: white;
-  border: 1px solid white;
+  border: 1px solid lightgrey;
   padding: 0.5rem;
   width: 100%;
+}
+
+input:focus {
+  border-color: white;
 }
 
 .buttons {
