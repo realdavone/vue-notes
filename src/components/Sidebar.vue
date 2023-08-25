@@ -1,12 +1,12 @@
 <template>
   <aside>
-    <div class="logo">
+    <!-- <div class="logo">
       Poznámky
-    </div>
+    </div> -->
     <section class="content">
       <header>
         <h2>Témy</h2>
-        <button class="add-topic-button" @click="modalRef.toggleModal(true)">Pridať tému</button>
+        <Button @click="modalRef.toggleModal(true)">Pridať tému</Button>
       </header>
 
       <div v-if="!!topicsStore.topics.length">
@@ -23,8 +23,8 @@
     </template>
     <template #footer>
       <div class="buttons">
-        <button class="add-topic-button" style="background-color: crimson;" @click="modalRef.toggleModal(false)">Zrušiť</button>
-        <button class="add-topic-button" @click="saveTopic">Vytvoriť</button>
+        <Button variation="destructive" @click="modalRef.toggleModal(false)">Zrušiť</Button>
+        <Button @click="saveTopic">Vytvoriť</Button>
       </div>
     </template>
   </Modal>
@@ -34,6 +34,7 @@
 import { ref } from 'vue'
 import useTopicsStore from '@/store/topics'
 import Topic from '@/components/Topic.vue'
+import Button from '@/components/Buttons/Button.vue'
 
 const topicsStore = useTopicsStore()
 

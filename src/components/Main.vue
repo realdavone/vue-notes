@@ -6,17 +6,21 @@
           <input class="editable" v-model="topicsStore.activeTopic.title" />
         </h2>
         <div>
-          <button class="remove-note-button" @click="removeTopic(topicsStore.activeTopic.id)">Odstrániť tému</button>
+          <Button variation="destructive" @click="removeTopic(topicsStore.activeTopic.id)">Odstrániť tému</Button>
         </div>
       </header>
       <section>
         <div class="add-note">
           <textarea v-model="newNote" placeholder="Nová poznámka..." @keypress.enter.prevent="addNote"></textarea>
-          <button class="add-note-button" @click="addNote">Pridať poznámku</button>
+          <Button @click="addNote">Pridať poznámku</Button>
         </div>
-        <div v-if="!!topicsStore.activeTopic.notes.length">
+        <template v-if="!!topicsStore.activeTopic.notes.length">
+          <div class="note-info">
+            Počet označených poznámok: {{ topicsStore.activeTopic.notes.reduce((total, note) => total + (note.isComplete ? 1 : 0),
+              0) }} / {{ topicsStore.activeTopic.notes.length }}
+          </div>
           <Note v-for="note in topicsStore.activeTopic.notes" :key="note.id" :note="note" />
-        </div>
+        </template>
         <div v-else>
           Nie sú tu žiadne poznámky.
         </div>
@@ -32,6 +36,7 @@
 import { ref } from 'vue'
 import useTopicsStore from '@/store/topics'
 import Note from '@/components/Note.vue'
+import Button from '@/components/Buttons/Button.vue'
 
 const topicsStore = useTopicsStore()
 
@@ -40,9 +45,9 @@ const newNote = ref('')
 const removeTopic = (id) => topicsStore.removeTopic(id)
 
 const addNote = () => {
-  if(!!!newNote.value) {
+  if (!!!newNote.value) {
     return
-  } 
+  }
   topicsStore.addNoteToTopic(topicsStore.activeTopic.id, newNote.value)
   newNote.value = ''
 }
@@ -61,16 +66,22 @@ header {
   align-items: center;
   margin-bottom: 1rem;
 }
+
 .editable {
   font-size: inherit;
   color: inherit;
   font-weight: inherit;
 }
+
 .overlay {
   display: grid;
   place-items: center;
   position: absolute;
   inset: 0;
+}
+
+.note-info {
+  margin-block: 0.75rem;
 }
 
 .add-note {
@@ -105,5 +116,4 @@ textarea {
 
 textarea:focus {
   border-color: white;
-}
-</style>
+}</style>

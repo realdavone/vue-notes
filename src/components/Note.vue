@@ -1,9 +1,7 @@
 <template>
   <article :data-complete="props.note.isComplete">
     <button class="checkmark" @click="toggleComplete">&check;</button>
-    <section class="content">
-      {{ props.note.text }}
-    </section>
+    <input v-model="props.note.text" />
     <button class="delete" @click="deleteNote">
       <span class="material-symbols-outlined">delete</span>
     </button>
@@ -37,17 +35,18 @@ article[data-complete=true] {
 article:not(:last-of-type) {
   margin-bottom: 0.5rem;
 }
-
-.content {
-  width: 100%;
-  padding-left: 0.5rem;
-}
-
 button {
   color: white;
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
+}
+
+input {
+  color: inherit;
+  padding: 0;
+  margin-inline: 0.5rem;
+  width: 100%;
 }
 
 button.checkmark {
